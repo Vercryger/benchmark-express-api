@@ -1,0 +1,52 @@
+name: API Performance Test
+
+on: [push, pull_request]
+
+jobs:
+  performance-test:
+    name: Performance Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apache2-utils wget netcat jq
+          wget https://github.com/mikefarah/yq/releases/download/v4.18.1/yq_linux_amd64 -O yq
+          chmod +x yq
+          sudo mv yq /usr/local/bin/yq
+          yarn install --frozen-lockfile
+
+      - name: Start server
+        run: |
+          node src/server.js &
+          echo $! > server.pid
+
+      - name: Wait for server to be ready
+        run: |
+          # Wait for the server to start
+          for i in {1..30}; do
+            nc -z localhost 3000 && echo "Server is up" && exit 0
+            echo "Waiting for server to be ready..."
+            sleep 1
+          done
+          echo "Server did not start in time" && exit 1
+
+      - name: Run performance test
+        run: ./benchmarker.sh
+        env:
+          CONFIG_FILE: 'config/endpoints.yaml'
+          THRESHOLD: 600
+          SHOW_FULL_RESULT: false
+
+      - name: Stop server
+        run: |
+          kill $(cat server.pid)

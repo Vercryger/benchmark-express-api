@@ -1,0 +1,16 @@
+endpoints:
+  - url: "http://localhost:3000/fast"
+    method: "GET"
+  - url: "http://localhost:3000/slow"
+    method: "GET"
+  - url: "http://localhost:3000/another-fast"
+    method: "GET"
+  - url: "http://localhost:3000/fast-post"
+    method: "POST"
+    payload: '{"data": "example"}'
+  - url: "http://localhost:3000/fast-put"
+    method: "PUT"
+    payload: '{"data": "example"}'
+  - url: "http://localhost:3000/slow-delete"
+    method: "DELETE"
+    payload: '{"data": "example"}'

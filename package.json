@@ -1,0 +1,21 @@
+{
+  "name": "benchmark-express-api-poc",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "benchmark": "./benchmarker.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "engines": {
+    "yarn": ">= 1.22.0",
+    "node": ">=20.14.0 <20.15.0",
+    "npm": "Not supported engine. Please use Yarn to install dependencies."
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2"
+  }
+}
